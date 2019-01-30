@@ -15,6 +15,8 @@ def getWorkingDir():
 def getTimestampString():
 	return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
+# TODO: Make sure there is a feeds directory
+
 # ========== USERPARAMS ============
 
 # Url to get the listings
@@ -104,113 +106,113 @@ def getListingHTMLText(url):
 
 def getTitle(opp, text):
 	try:
-		obj = re.search( r'<p class=\"contentTitle contentTitleMarginTop\">\s*(.*?)\s*</p>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'<p class=\"contentTitle contentTitleMarginTop\">\s*(.*?)\s*</p>', text, re.M|re.I|re.S)
 		opp["Title"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve title information for "+opp["ID"])
 		print(text)
-		opp["Title"] = ""
+		opp["Title"] = " "
 		return False
 	return True
 
 def getOrganization(opp, text):
 	try:
-		obj = re.search( r'Organization</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Organization</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Organization"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve organization information for "+opp["ID"])
-		opp["Organization"] = ""
+		opp["Organization"] = " "
 		return False
 	return True
 
 def getWebsite(opp, text):
 	try:
-		obj = re.search( r'Website</div><div class=\"info-right-column mobile-width-100-center\">\s*<a href=\"\s*(.*?)\s*\" target=\"_blank\"', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Website</div><div class=\"info-right-column mobile-width-100-center\">\s*<a href=\"\s*(.*?)\s*\" target=\"_blank\"', text, re.M|re.I|re.S)
 		opp["Website"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve website information for "+opp["ID"])
-		opp["Website"] = ""
+		opp["Website"] = " "
 		return False
 	return True
 
 def getCountry(opp, text):
 	try:
-		obj = re.search( r'Country</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Country</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Country"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve country information for "+opp["ID"])
-		opp["Country"] = ""
+		opp["Country"] = " "
 		return False
 	return True
 
 def getLocation(opp, text):
 	try:
-		obj = re.search( r'Location</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Location</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Location"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve location information for "+opp["ID"])
-		opp["Location"] = ""
+		opp["Location"] = " "
 		return False
 	return True
 
 def getOpportunityType(opp, text):
 	try:
-		obj = re.search( r'Opportunity Type</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Opportunity Type</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Opportunity Type"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve opportunity type information for "+opp["ID"])
-		opp["Opportunity Type"] = ""
+		opp["Opportunity Type"] = " "
 		return False
 	return True
 
 def getOpportunityDiscipline(opp, text):
 	try:
-		obj = re.search( r'Opportunity Discipline</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Opportunity Discipline</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Opportunity Discipline"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve opportunity discipline information for "+opp["ID"])
-		opp["Opportunity Discipline"] = ""
+		opp["Opportunity Discipline"] = " "
 		return False
 	return True
 
 def getApplicationFee(opp, text):
 	try:
-		obj = re.search( r'Application Fee</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Application Fee</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Application Fee"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve application fee information for "+opp["ID"])
-		opp["Application Fee"] = ""
+		opp["Application Fee"] = " "
 		return False
 	return True
 
 def getApplicationDeadline(opp, text):
 	try:
-		obj = re.search( r'Application Deadline</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Application Deadline</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Application Deadline"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve application deadline information for "+opp["ID"])
-		opp["Application Deadline"] = ""
+		opp["Application Deadline"] = " "
 		return False
 	return True
 
 # Issue: https://stackoverflow.com/questions/20056306/match-linebreaks-n-or-r-n
 def getDescription(opp, text):
 	try:
-		obj = re.search( r'Description</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
-		opp["Application Deadline"] = obj.group(1).strip()
+		obj = re.search( r'Description</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
+		opp["Description"] = obj.group(1).strip()
 	except:
-		print("Could not retrieve application deadline information for "+opp["ID"])
-		opp["Application Deadline"] = ""
+		print("Could not retrieve description information for "+opp["ID"])
+		opp["Description"] = " "
 		return False
 	return True
 
 def getApplicationInstructions(opp, text):
 	try:
-		obj = re.search( r'Application Instructions / Public Contact Information</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', x.text, re.M|re.I|re.S)
+		obj = re.search( r'Application Instructions / Public Contact Information</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
 		opp["Application Instructions"] = obj.group(1).strip()
 	except:
 		print("Could not retrieve application instructions information for "+opp["ID"])
-		opp["Application Instructions"] = ""
+		opp["Application Instructions"] = " "
 		return False
 	return True
 
@@ -238,6 +240,7 @@ def getListingAttributes(ID):
 	getApplicationFee(out, text)
 	getApplicationDeadline(out, text)
 	getApplicationInstructions(out, text)
+	getDescription(out, text)
 	# Set the time we retrieved this data
 	out["timestamp"] = getTimestampString();
 
@@ -290,7 +293,7 @@ def getHtmlFormattedListing(post):
 	out = out + "<p>" + post["Organization"] + "</p>"
 	out = out + "<p>" + post["Website"] + "</p>"
 	out = out + "<p>" + post["Location"] + ", " + post["Country"] + "</p>"
-	out = out + "<p>" + post["Discipline"] + "</p>"
+	out = out + "<p>" + post["Opportunity Discipline"] + "</p>"
 	out = out + "<p>" + post["Application Fee"] + "</p>"
 	out = out + "<p>" + post["Application Deadline"] + "</p>"
 	out = out + "<p>" + post["Description"] + "</p>"
@@ -324,7 +327,11 @@ def saveFeed(listings, title, path):
 		
 		e.id( item["ID"] )
 		e.title( item["Title"] )
-		e.link( item["url"] )
+		# for key, value in item.items():
+			# print(key, value);
+		# print(item["url"])
+		# if "url" in item:
+		e.link( href=item["url"] )
 
 		text = getHtmlFormattedListing(item)
 		e.content( type="html", content=text )
@@ -366,8 +373,8 @@ def process():
 
 	# Upload items to github
 	uploads = []
-	uploads.append("/feeds/" + saveTitle + ".xml")
-	uploads.append("db.json")
+	uploads.append(getWorkingDir() + "/feeds/" + saveTitle + ".xml")
+	uploads.append(getWorkingDir() + "/" + "db.json")
 	repo = Repo("../" + repoName)
 	repo.index.add(uploads)
 	repo.index.commit("Updated feeds")
