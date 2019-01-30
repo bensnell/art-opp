@@ -4,10 +4,16 @@ import requests
 from tinydb import TinyDB, Query
 import re
 import time
+from datetime import datetime
+from feedgen.feed import FeedGenerator
+from git import Repo
 
 # Get the current working directory
 def getWorkingDir():
 	return os.path.dirname(os.path.abspath(__file__))
+
+def getTimestampString():
+	return datetime.now().strftime('%Y-%m-%d %H:%M:%S')
 
 # ========== USERPARAMS ============
 
@@ -19,6 +25,12 @@ db = TinyDB(getWorkingDir() + "/" + "db.json")
 
 # Number of seconds to refresh
 refreshSec = 60*60 # every hr
+
+# Number of last seconds of data to include in every feed file
+includeSec = 60 * 60 * 24
+
+githubRepoURL = "https://raw.githubusercontent.com/bensnell/art-opp/master/"
+repoName = "art-opp"
 
 # =========== CODE =============
 
@@ -35,7 +47,10 @@ def getListings(URL, pageNumber):
 	except:
 		print("Could not retrieve the url " + URL)
 		data = None
-	return response
+	return data
+
+def uniqueListOfDicts(tag, array):
+	return list({v[tag]:v for v in array}.values())
 
 def getAllListings(URL, maxPages):
 
@@ -45,7 +60,7 @@ def getAllListings(URL, maxPages):
 		if pagelistings == None:
 			break
 		out = out + pagelistings
-	return list(set(out))
+	return uniqueListOfDicts("ID", out)
 
 # Parse the information for opportunities; returns a list of ID's
 def parseListings(listings, types):
@@ -86,6 +101,17 @@ def getListingHTMLText(url):
 		print("Could not get text from url " + url)
 		out = None
 	return out
+
+def getTitle(opp, text):
+	try:
+		obj = re.search( r'<p class=\"contentTitle contentTitleMarginTop\">\s*(.*?)\s*</p>', x.text, re.M|re.I|re.S)
+		opp["Title"] = obj.group(1).strip()
+	except:
+		print("Could not retrieve title information for "+opp["ID"])
+		print(text)
+		opp["Title"] = ""
+		return False
+	return True
 
 def getOrganization(opp, text):
 	try:
@@ -188,48 +214,127 @@ def getApplicationInstructions(opp, text):
 		return False
 	return True
 
+# Return a dictionary with attributes describing this listing
+# If we couldn't retrieve information, None is returned
+def getListingAttributes(ID):
 
+	# Get this url
+	thisUrl = "https://www.nyfa.org/Opportunities/Show/"+ID
+	# Retrieve the page
+	text = getListingHTMLText(thisUrl)
+	if (text == None): return None
 
-# Get the attributes of each opportunity
-fullOpp = []
-for opp in newOpp:
+	# Output dictionary with attributes
+	out = {}
+	out["ID"] = ID
+	out["url"] = thisUrl; # url of post
+	getTitle(out, text)
+	getOrganization(out, text)
+	getWebsite(out, text)
+	getCountry(out, text)
+	getLocation(out, text)
+	getOpportunityType(out, text)
+	getOpportunityDiscipline(out, text)
+	getApplicationFee(out, text)
+	getApplicationDeadline(out, text)
+	getApplicationInstructions(out, text)
+	# Set the time we retrieved this data
+	out["timestamp"] = getTimestampString();
 
+	return out
 
+# Get all listing attributes for a group of IDs
+def getAllListingsAttributes(ids):
 
-	thisUrl = "https://www.nyfa.org/Opportunities/Show/"+opp["ID"]
+	out = []
+	for ID in ids:
 
-	text
-	try:
-		# Get the page
-		text = getListingHTMLText(thisUrl)
-		if text == None: break
-
-		# A new container for "get" data
-		thisOpp = {}
-
-		# Get all matches  and populate the new dictionary
-		getOrganization(thisOpp, text)
-		getWebsite(thisOpp, text)
-		getCountry(thisOpp, text)
-		getLocation(thisOpp, text)
-
-
-
-
-			
-
-
+		# Get this object from the id
+		thisObject = getListingAttributes(ID)
+		if thisObject != None:
+			# Save this object
+			out.append(thisObject)
+	return out
 
 # Add all of the new opportunities to the RSS feed
+def saveToDB(_db, array):
+	for item in array:
+		_db.insert(item)
+
+# Get all items within a timeframe
+def getLastItems(_db, _lastSec):
+
+	out = []
+	for item in _db:
+
+		if "ID" not in item:
+			continue
+
+		# Get this item's time
+		itemTime = datetime.strptime(item["timestamp"], '%Y-%m-%d %H:%M:%S')
+
+		# Check if this time is long ago enough
+		dt = datetime.now() - itemTime
+		diff = dt.total_seconds()
+		if diff < _lastSec:
+			out.append(item)
+
+	return out
+
+# Format a post for the rss feed
+def getHtmlFormattedListing(post):
+
+	out = ""
+
+	out = out + "<p>" + post["Title"] + "</p>"
+	out = out + "<p>" + post["Organization"] + "</p>"
+	out = out + "<p>" + post["Website"] + "</p>"
+	out = out + "<p>" + post["Location"] + ", " + post["Country"] + "</p>"
+	out = out + "<p>" + post["Discipline"] + "</p>"
+	out = out + "<p>" + post["Application Fee"] + "</p>"
+	out = out + "<p>" + post["Application Deadline"] + "</p>"
+	out = out + "<p>" + post["Description"] + "</p>"
+	out = out + "<p>" + post["Application Instructions"] + "</p>"
+
+	return out
 
 
+# Save a list of items to an rss xml feed file
+def saveFeed(listings, title, path):
 
+	url = githubRepoURL + title + ".xml"
 
-# Add all new open calls to an RSS feed
+	# Create a feed generator
+	fg = FeedGenerator()
 
+	# Create the feed's title
+	fg.id(url)
+	fg.title(title)
+	fg.author({'name':'Ben Snell'})
+	fg.description("Art Show Open Call Opportunities")
+	fg.link( href=url, rel='alternate' )
+	fg.language('en')
+	time = datetime.now().strftime('%Y-%m-%d %H:%M:%S') + "-05:00"
+	fg.pubDate(time)
+	fg.updated(time)
 
+	for item in listings:
 
-# Save the new open calls to a database
+		e = fg.add_entry()
+		
+		e.id( item["ID"] )
+		e.title( item["Title"] )
+		e.link( item["url"] )
+
+		text = getHtmlFormattedListing(item)
+		e.content( type="html", content=text )
+
+		# This doesn't seem to work:
+		# e.pubDate( datetime2RSSString(clDate(apt[2])) )
+		# e.updated( datetime2RSSString(clDate(apt[2])) )
+
+	fg.atom_str(pretty=True)
+	fg.atom_file(path)
 
 
 def process():
@@ -245,17 +350,29 @@ def process():
 	# Get the new post IDs
 	newIDs = getNewListings(recentIDs)
 
+	# Get the attributes for each id (create a dict for each)
+	objects = getAllListingsAttributes(newIDs)
 
+	# Save all of these objects to the database
+	saveToDB(db, objects)
 
+	# Get all items observed within the last includeSec
+	lastItems = getLastItems(db, includeSec)
 
+	# Save these items to an xml rss file
+	saveTitle = "open-calls"
+	savePath = getWorkingDir() + "/feeds/" + saveTitle + ".xml";
+	saveFeed(lastItems, saveTitle, savePath)
 
-
-
-
-
-	# TODO: Embed links
-
-
+	# Upload items to github
+	uploads = []
+	uploads.append("/feeds/" + saveTitle + ".xml")
+	uploads.append("db.json")
+	repo = Repo("../" + repoName)
+	repo.index.add(uploads)
+	repo.index.commit("Updated feeds")
+	origin = repo.remote('origin')
+	origin.push()
 
 
 def main():
