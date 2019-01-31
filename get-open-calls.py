@@ -17,6 +17,12 @@ def getTimestampString():
 
 # TODO: Make sure there is a feeds directory
 
+# Reference: https://stackoverflow.com/questions/1112012/replace-url-with-a-link-using-regex-in-python
+def wrapLinks(string):
+	URL_REGEX = re.compile(r"(^|[\n ])(([\w]+?://[\w\#$%&~.\-;:=,?@\[\]+]*)(/[\w\#$%&~/.\-;:=,?@\[\]+]*)?)", re.IGNORECASE | re.DOTALL)
+	return URL_REGEX.sub(r'\1<a href="\2" target="_blank">\3</a>', string)
+
+
 # ========== USERPARAMS ============
 
 # Title to save this document
@@ -206,7 +212,7 @@ def getApplicationDeadline(opp, text):
 def getDescription(opp, text):
 	try:
 		obj = re.search( r'Description</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Description"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","")
+		opp["Description"] = wrapLinks(obj.group(1).strip().replace("\n","<br/>").replace("\r",""))
 	except:
 		print("Could not retrieve description information for "+opp["ID"])
 		opp["Description"] = " "
@@ -216,7 +222,7 @@ def getDescription(opp, text):
 def getApplicationInstructions(opp, text):
 	try:
 		obj = re.search( r'Application Instructions / Public Contact Information</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Application Instructions"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","")
+		opp["Application Instructions"] = wrapLinks(obj.group(1).strip().replace("\n","<br/>").replace("\r",""))
 	except:
 		print("Could not retrieve application instructions information for "+opp["ID"])
 		opp["Application Instructions"] = " "
