@@ -19,6 +19,9 @@ def getTimestampString():
 
 # ========== USERPARAMS ============
 
+# Title to save this document
+saveTitle = "open-calls-2"
+
 # Url to get the listings
 listingsURL = "https://www.nyfa.org/Opportunities/Search"
 
@@ -378,7 +381,6 @@ def process():
 	lastItems = getLastItems(db, includeSec)
 
 	# Save these items to an xml rss file
-	saveTitle = "open-calls"
 	savePath = getWorkingDir() + "/feeds/" + saveTitle + ".xml";
 	saveFeed(lastItems, saveTitle, savePath)
 
