@@ -19,8 +19,14 @@ def getTimestampString():
 
 # Reference: https://stackoverflow.com/questions/1112012/replace-url-with-a-link-using-regex-in-python
 def wrapLinks(string):
-	URL_REGEX = re.compile(r"(^|[\n ])(([\w]+?://[\w\#$%&~.\-;:=,?@\[\]+]*)(/[\w\#$%&~/.\-;:=,?@\[\]+]*)?)", re.IGNORECASE | re.DOTALL)
-	return URL_REGEX.sub(r'\1<a href="\2" target="_blank">\3</a>', string)
+	out = string
+	try:
+		URL_REGEX = re.compile(r"(^|[\n ])(([\w]+?://[\w\#$%&~.\-;:=,?@\[\]+]*)(/[\w\#$%&~/.\-;:=,?@\[\]+]*)?)", re.IGNORECASE | re.DOTALL)
+		out = URL_REGEX.sub(r'\1<a href="\2" target="_blank">\3</a>', string)
+	except:
+		print("Could not wrap links properly")
+		out = string
+	return out
 
 
 # ========== USERPARAMS ============
