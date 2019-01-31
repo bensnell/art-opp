@@ -36,6 +36,10 @@ repoName = "art-opp"
 
 # =========== CODE =============
 
+saveFolderPath = getWorkingDir() + "/" + "feeds"
+if not os.path.exists(saveFolderPath):
+	os.makedirs(saveFolderPath)
+
 # Try to get the url of the listings
 def getListings(URL, pageNumber):
 	data = None
