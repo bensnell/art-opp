@@ -421,23 +421,24 @@ def process():
 
 def main():
 
-	print("Starting Process ------------------------")
+	while True:
 
-	# Run code
-	start = time.time()
-	process()
-	stop = time.time()
+		print("Starting Process ------------------------")
 
-	print("Ending Process ------------------------Waiting...")
+		# Run code
+		start = time.time()
+		process()
+		stop = time.time()
 
-	# Get duration in seconds
-	duration = stop - start
+		print("Ending Process ------------------------Waiting...")
 
-	# Wait for no more than 15 minutes
-	time.sleep(max(refreshSec - duration, 0))
+		# Get duration in seconds
+		duration = stop - start
 
-	print("... Done waiting")
+		# Wait for no more than 15 minutes
+		time.sleep(max(refreshSec - duration, 0))
 
+		print("... Done waiting")
 
 if __name__ == "__main__":
 	main()
