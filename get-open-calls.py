@@ -32,7 +32,7 @@ def wrapLinks(string):
 # ========== USERPARAMS ============
 
 # Title to save this document
-saveTitle = "open-calls-5"
+saveTitle = "open-calls-6"
 
 # Url to get the listings
 listingsURL = "https://www.nyfa.org/Opportunities/Search"
@@ -54,6 +54,16 @@ repoName = "art-opp"
 saveFolderPath = getWorkingDir() + "/" + "feeds"
 if not os.path.exists(saveFolderPath):
 	os.makedirs(saveFolderPath)
+
+def getShortDate(dateString):
+	out = ""
+	try:
+		nums = dateString.split("/")
+		out = str(int(nums[0])) + "/" + str(int(nums[1])) + " - ";
+	except:
+		print("Could not parse out the simplified date for the title")
+		out = ""
+	return out
 
 # Try to get the url of the listings
 def getListings(URL, pageNumber):
@@ -352,7 +362,9 @@ def saveFeed(listings, title, path):
 		e = fg.add_entry()
 		
 		e.id( item["ID"] )
-		e.title( item["Title"] )
+		# Get a clearer title
+		thisTitle = getShortDate(post["Application Deadline"]) + item["Title"]
+		e.title( thisTitle )
 		# for key, value in item.items():
 			# print(key, value);
 		# print(item["url"])
