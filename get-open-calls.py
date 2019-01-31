@@ -320,9 +320,9 @@ def getHtmlFormattedListing(post):
 		feeInfo = post["Application Fee"] + " fee"
 	out = out + "💰 " + feeInfo + "<br/>"
 	out = out + "➡ " + "<a href=\""+post["Website"]+"\">"+"Apply"+"</a>" + "</p>"
-	out = out  +"<p><strong>" + "====== DESCRIPTION ======" + "</strong></p>"
+	out = out  +"<br/><p><strong>" + "====== DESCRIPTION ======" + "</strong></p>"
 	out = out + "<p>" + post["Description"] + "</p>"
-	out = out  +"<p><strong>" + "===== INSTRUCTIONS =====" + "</strong></p>"
+	out = out  +"<br/><p><strong>" + "===== INSTRUCTIONS =====" + "</strong></p>"
 	out = out + "<p>" + post["Application Instructions"] + "</p>"
 
 	return out
