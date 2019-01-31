@@ -294,13 +294,20 @@ def getHtmlFormattedListing(post):
 	out = ""
 
 	# out = out + "<p>" + post["Title"] + "</p>"
-	out = out + "<p>" + "Organization: " + post["Organization"] + "</p>"
-	out = out + "<p>" + post["Website"] + "</p>"
-	out = out + "<p>" + post["Location"] + ", " + post["Country"] + "</p>"
-	out = out + "<p>" + post["Opportunity Discipline"] + "</p>"
-	out = out + "<p>" + post["Application Fee"] + "</p>"
-	out = out + "<p>" + post["Application Deadline"] + "</p>"
+	out = out + "<p>" + post["Organization"] + "<br/>"
+	out = out + "📍 " + post["Location"] + ", " + post["Country"] + "<br/>"
+	out = out + "🎨 " + post["Opportunity Discipline"] + "<br/>"
+	out = out + "📅 " + post["Application Deadline"] + " deadline" + "<br/>"
+	feeInfo = ""
+	if post["Application Fee"] == " ":
+		feeInfo = "unknown fee"
+	else:
+		feeInfo = post["Application Fee"] + " fee"
+	out = out + "💰 " + feeInfo + "<br/>"
+	out = out + "➡ " + "<a href=\""+post["Website"]+"\">"+"Apply"+"</a>" + "</p>"
+	out = out  +"<p><strong>" + "===== DESCRIPTION ======" + "</strong></p>"
 	out = out + "<p>" + post["Description"] + "</p>"
+	out = out  +"<p><strong>" + "===== INSTRUCTIONS =====" + "</strong></p>"
 	out = out + "<p>" + post["Application Instructions"] + "</p>"
 
 	return out
