@@ -114,7 +114,7 @@ def getListingHTMLText(url):
 def getTitle(opp, text):
 	try:
 		obj = re.search( r'<p class=\"contentTitle contentTitleMarginTop\">\s*(.*?)\s*</p>', text, re.M|re.I|re.S)
-		opp["Title"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Title"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve title information for "+opp["ID"])
 		print(text)
@@ -125,7 +125,7 @@ def getTitle(opp, text):
 def getOrganization(opp, text):
 	try:
 		obj = re.search( r'Organization</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Organization"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Organization"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve organization information for "+opp["ID"])
 		opp["Organization"] = " "
@@ -135,7 +135,7 @@ def getOrganization(opp, text):
 def getWebsite(opp, text):
 	try:
 		obj = re.search( r'Website</div><div class=\"info-right-column mobile-width-100-center\">\s*<a href=\"\s*(.*?)\s*\" target=\"_blank\"', text, re.M|re.I|re.S)
-		opp["Website"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Website"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve website information for "+opp["ID"])
 		opp["Website"] = " "
@@ -145,7 +145,7 @@ def getWebsite(opp, text):
 def getCountry(opp, text):
 	try:
 		obj = re.search( r'Country</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Country"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Country"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve country information for "+opp["ID"])
 		opp["Country"] = " "
@@ -155,7 +155,7 @@ def getCountry(opp, text):
 def getLocation(opp, text):
 	try:
 		obj = re.search( r'Location</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Location"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Location"] = obj.group(1).strip().replace("\n","<br/>").replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve location information for "+opp["ID"])
 		opp["Location"] = " "
@@ -165,7 +165,7 @@ def getLocation(opp, text):
 def getOpportunityType(opp, text):
 	try:
 		obj = re.search( r'Opportunity Type</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Opportunity Type"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Opportunity Type"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve opportunity type information for "+opp["ID"])
 		opp["Opportunity Type"] = " "
@@ -175,7 +175,7 @@ def getOpportunityType(opp, text):
 def getOpportunityDiscipline(opp, text):
 	try:
 		obj = re.search( r'Opportunity Discipline</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Opportunity Discipline"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Opportunity Discipline"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve opportunity discipline information for "+opp["ID"])
 		opp["Opportunity Discipline"] = " "
@@ -185,7 +185,7 @@ def getOpportunityDiscipline(opp, text):
 def getApplicationFee(opp, text):
 	try:
 		obj = re.search( r'Application Fee</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Application Fee"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Application Fee"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve application fee information for "+opp["ID"])
 		opp["Application Fee"] = " "
@@ -195,7 +195,7 @@ def getApplicationFee(opp, text):
 def getApplicationDeadline(opp, text):
 	try:
 		obj = re.search( r'Application Deadline</div><div class=\"info-right-column mobile-width-100-center\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Application Deadline"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Application Deadline"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve application deadline information for "+opp["ID"])
 		opp["Application Deadline"] = " "
@@ -206,7 +206,7 @@ def getApplicationDeadline(opp, text):
 def getDescription(opp, text):
 	try:
 		obj = re.search( r'Description</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Description"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Description"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve description information for "+opp["ID"])
 		opp["Description"] = " "
@@ -216,7 +216,7 @@ def getDescription(opp, text):
 def getApplicationInstructions(opp, text):
 	try:
 		obj = re.search( r'Application Instructions / Public Contact Information</h2>\s*<div class=\"projectDetailsDiv text-justify text-pre-wrap\">\s*(.*?)\s*</div>', text, re.M|re.I|re.S)
-		opp["Application Instructions"] = obj.group(1).strip().replace("&#13;","<br/>")
+		opp["Application Instructions"] = obj.group(1).strip().replace("\n","<br/>").replace("\r","<br/>")
 	except:
 		print("Could not retrieve application instructions information for "+opp["ID"])
 		opp["Application Instructions"] = " "
