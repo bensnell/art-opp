@@ -363,7 +363,7 @@ def saveFeed(listings, title, path):
 		
 		e.id( item["ID"] )
 		# Get a clearer title
-		thisTitle = getShortDate(post["Application Deadline"]) + item["Title"]
+		thisTitle = getShortDate(item["Application Deadline"]) + item["Title"]
 		e.title( thisTitle )
 		# for key, value in item.items():
 			# print(key, value);
