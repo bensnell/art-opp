@@ -32,7 +32,7 @@ def wrapLinks(string):
 # ========== USERPARAMS ============
 
 # Title to save this document
-saveTitle = "open-calls-7"
+saveTitle = "open-calls-8"
 
 # Url to get the listings
 listingsURL = "https://www.nyfa.org/Opportunities/Search"
