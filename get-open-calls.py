@@ -44,7 +44,7 @@ db = TinyDB(getWorkingDir() + "/" + "db.json")
 refreshSec = 60*60 # every hr
 
 # Number of last seconds of data to include in every feed file
-includeSec = 60 * 60 * 24
+includeSec = 60 * 60 * 24 * 30 * 2
 
 githubRepoURL = "https://raw.githubusercontent.com/bensnell/art-opp/master/"
 repoName = "art-opp"
